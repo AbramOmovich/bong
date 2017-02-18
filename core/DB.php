@@ -40,6 +40,7 @@ class DB
     }
 
     public function update($table, $data, $where){
+        //this piece of shit temporally
         var_dump($table, $data,$where);
         $data_keys = array_keys($data);
         $data_val = array_values($data);
