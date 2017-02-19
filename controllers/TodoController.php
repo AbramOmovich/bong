@@ -21,23 +21,15 @@ class TodoController
 
     public function addTodo()
     {
-        $title = $_POST['title'];
+        if ($_POST['title']){
+            $title = trim(strip_tags( $_POST['title']));
 
-        $user_pattern = '/\B(:\s)?(@([a-z\d]*))/i';
-
-
-
-        preg_replace($user_pattern,,)
-
-
-        //var_dump($matches);
-
-//        $this->db->insert('todo', [
-//            'title' => $title,
-//            'complete' => 0
-//        ]);
-//
-//        Request::back();
+            $this->db->insert('todo', [
+                'title' => $title,
+                'complete' => 0
+            ]);
+        }
+        Request::back();
     }
 
     public function changeTodo(){

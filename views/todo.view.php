@@ -17,7 +17,9 @@
         <input type="submit">
     </form>
 
-    <?php if(count($tasks)): ?>
+    <?php use Core\Filters\TwitterFilter;
+
+    if(count($tasks)): ?>
         <hr>
         <form action="/todo/change" method="post">
             <select name="action" id="">
@@ -31,7 +33,7 @@
                 <?php $check = (bool) $task['complete'] ?>
                 <li<?= ($check) ? ' class="done"' : '' ?>>
                     <input <?= ($check) ? 'checked' : '' ?> type="checkbox" name="complete[]" value="<?= $task['id'] ?>">
-                    <?= $task['title'] ?>
+                    <?= TwitterFilter::filterUser($task['title'])  ?>
                 </li>
             <?php endforeach; ?>
         </ul>

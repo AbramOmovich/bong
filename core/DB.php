@@ -27,6 +27,8 @@ class DB
             $values
         );
 
+        $sql = strip_tags($sql);
+
        $this->db->prepare($sql)->execute($data);
     }
 
