@@ -48,6 +48,7 @@ class DB
      *                                            value2
      *                                           ]
      *                       ]
+     * @return string
      */
     private static function where_cond(array $where){
         $where_str = "";
