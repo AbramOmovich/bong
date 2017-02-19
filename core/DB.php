@@ -18,7 +18,7 @@ class DB
     public function insert($table, array $data)
     {
         $fields = implode(', ', array_keys($data));
-        $values = '\'' . implode('\', \'', array_values($data)) . '\'';
+        $values =  ':'.implode(', :', array_keys($data));
 
         $sql = sprintf(
             "INSERT INTO %s (%s) VALUE (%s)",
@@ -26,27 +26,65 @@ class DB
             $fields,
             $values
         );
-        
-        return $this->db->query($sql);
+
+       $this->db->prepare($sql)->execute($data);
     }
 
     public function select($table)
     {
         $sql = "SELECT * FROM $table";
-        
-        $result = $this->db->query($sql);
-        
-        return $result->fetchAll();
+
+        return $this->db->query($sql)->fetchAll();
+    }
+
+    /**
+     * @param string $table
+     * @param array $data = [
+     *                       'field_name_1' => value_1,
+     *                      ]
+     * @param array $where = [
+     *                         'field_name_1' => [
+     *                                            value1,
+     *                                            value2
+     *                                           ]
+     *                       ]
+     */
+    private static function where_cond(array $where){
+        $where_str = "";
+        foreach($where as $key => $values){
+            foreach ($values as $value){
+                $where_str.= $key. ' = '. $value.' OR ';
+            }
+        }
+        $where_str = rtrim($where_str, ' OR ');
+        return $where_str;
     }
 
     public function update($table, $data, $where){
-        //this piece of shit temporally
-        var_dump($table, $data,$where);
-        $data_keys = array_keys($data);
-        $data_val = array_values($data);
-        $where_str = array_keys($where)[0].' = '. implode( ' OR '.array_keys($where)[0].' = ', array_values($where)[0]);
+        $fields_str = implode(' = ?, ',array_keys($data)).' = ?';
 
-        $sql = "UPDATE $table SET " .$data_keys[0].' = '.$data_val[0].' WHERE '. $where_str;
-        var_dump($sql);
+        $where_str = $this->where_cond($where);
+
+
+        $sql = sprintf(
+            "UPDATE %s SET %s WHERE %s",
+            $table,
+            $fields_str,
+            $where_str
+        );
+        $this->db->prepare($sql)->execute(array_values($data));
     }
+
+    public function sql_delete($table, $where){
+
+        $where_str= $this->where_cond($where);
+
+        $sql = sprintf("DELETE FROM %s WHERE %s",
+            $table,
+            $where_str
+        );
+
+        $this->db->exec($sql);
+    }
+
 }

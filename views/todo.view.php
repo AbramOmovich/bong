@@ -19,7 +19,7 @@
 
     <?php if(count($tasks)): ?>
         <hr>
-        <form action="/todo/check" method="post">
+        <form action="/todo/change" method="post">
             <select name="action" id="">
                 <option value="">Выбирите действие</option>
                 <option value="mark">Пометить как сделаные</option>

@@ -29,7 +29,17 @@ class TodoController
         Request::back();
     }
 
-    public function checkTodo(){
-        $this->db->update('todo', ['complete' => 1],[ 'id' => $_POST['complete']]);
+    public function changeTodo(){
+        $action = $_POST['action'];
+        if ($action && isset($_POST['complete'])){
+            if ($action === 'mark') {
+                $this->db->update('todo', ['complete' => 1],[ 'id' => $_POST['complete'] ]);
+            }
+            else if ($action === 'delete'){
+               $this->db->sql_delete('todo',[ 'id' => $_POST['complete'] ]);
+            }
+        }
+
+        Request::back();
     }
 }
